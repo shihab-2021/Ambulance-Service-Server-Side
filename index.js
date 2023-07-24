@@ -260,9 +260,9 @@ async function run() {
       // io.emit("locationUpdate", activeUsers);
     }, 6000);
 
-    http.listen(5000, () => {
-      console.log(`Server running on http://localhost:${port}`);
-    });
+    // http.listen(5000, () => {
+    //   console.log(`Server running on http://localhost:${port}`);
+    // });
   } finally {
     // await client.close()
   }
@@ -273,6 +273,6 @@ app.get("/", (req, res) => {
   res.send(`<h1>Rescue Reach Server Running</h1>`);
 });
 
-// app.listen(port, () => {
-//   console.log(`Listening port: ${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Listening port: ${port}`);
+});
