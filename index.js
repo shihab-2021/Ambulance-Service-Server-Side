@@ -197,6 +197,14 @@ async function run() {
       res.json(result);
     });
 
+    // for single user
+    app.get("/user/:id", async (req, res) => {
+      const query = { _id: ObjectId(req?.params?.id) };
+      const cursor = await usersCollection?.findOne(query);
+      res.json(cursor);
+      console.log(cursor);
+    });
+
     // blog delete api
     app.delete("/delete-user/:id", async (req, res) => {
       const query = { _id: ObjectId(req.params.id) };
