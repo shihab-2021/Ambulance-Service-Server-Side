@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -127,7 +127,7 @@ async function run() {
 
       // getting blogger info here
       const blogger = await usersCollection.findOne({
-        _id: ObjectId(bloggerId),
+        _id: new ObjectId(bloggerId),
       });
       const bloggerPayload = {
         id: blogger?._id,
@@ -136,7 +136,7 @@ async function run() {
         image: blogger?.image,
       };
       // getting user info here
-      const user = await usersCollection.findOne({ _id: ObjectId(userId) });
+      const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
       const userPayload = {
         id: user?._id,
         email: user?.email,
@@ -199,7 +199,7 @@ async function run() {
 
     // for single user
     app.get("/user/:id", async (req, res) => {
-      const query = { _id: ObjectId(req?.params?.id) };
+      const query = { _id: new ObjectId(req?.params?.id) };
       const cursor = await usersCollection?.findOne(query);
       res.json(cursor);
       console.log(cursor);
@@ -207,7 +207,7 @@ async function run() {
 
     // blog delete api
     app.delete("/delete-user/:id", async (req, res) => {
-      const query = { _id: ObjectId(req.params.id) };
+      const query = { _id: new ObjectId(req.params.id) };
       const result = await usersCollection.deleteOne(query);
       res.json(result);
 
