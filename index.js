@@ -27,6 +27,7 @@ async function run() {
     const database = client.db("rescueReach");
     const usersCollection = database.collection("users");
     const activeUsersCollection = database.collection("activeUsers");
+    const emergencyCollection = database.collection("emergency");
 
     const activeUsers = [];
 
@@ -267,6 +268,42 @@ async function run() {
       // const activeUsers = await usersCollection.find({}).toArray();
       // io.emit("locationUpdate", activeUsers);
     }, 6000);
+
+    // for getting all emergency
+    app.get("/emergency", async (req, res) => {
+      const cursor = emergencyCollection?.find({});
+      const emergency = await cursor?.toArray();
+      res.json(emergency);
+    });
+
+    // for posting emergency
+    app.post("/emergency", async (req, res) => {
+      const emergency = req.body;
+      const result = await emergencyCollection.insertOne(emergency);
+      res.json(result);
+    });
+
+    // for single emergency
+    app.get("/emergency/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const cursor = await emergencyCollection?.findOne(query);
+      res.json(cursor);
+    });
+
+    // for single emergency by email
+    app.get("/emergency-rider/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await emergencyCollection?.findOne(query);
+      res.json(user);
+    });
+
+    // emergency delete api
+    app.delete("/delete-emergency/:email", async (req, res) => {
+      const query = { email: req?.params?.email };
+      const result = await emergencyCollection?.deleteOne(query);
+      res.json(result);
+    });
 
     // http.listen(5000, () => {
     //   console.log(`Server running on http://localhost:${port}`);
