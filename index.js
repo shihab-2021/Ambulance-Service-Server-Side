@@ -176,11 +176,11 @@ async function run() {
     });
 
     // and user follow and following api end here
-    app.get("/users-data", async (req, res) => {
-      const user = usersCollection.find({});
-      const result = await user.toArray();
-      res.send(result);
-    });
+    // app.get("/users-data", async (req, res) => {
+    //   const user = usersCollection.find({});
+    //   const result = await user.toArray();
+    //   res.send(result);
+    // });
 
     // users information by email
     app.get("/users-data/:email", async (req, res) => {
@@ -256,6 +256,26 @@ async function run() {
         lastUpdated: { $lte: cutoffTime },
       });
       console.log(deleteResult);
+      const currentDate = new Date();
+
+      // const user = activeUsersCollection.find({});
+      // const result = await user;
+
+      // Retrieve all data from the database
+      const allData = await rideRequestCollection.find({}).toArray();
+
+      // const time = new Date(allData[2]?.ride)
+
+      // Filter out old data based on the dateTime field
+      const oldData = allData.filter(
+        (item) => new Date(item.rideDateTime) < currentDate
+      );
+
+      // Delete old data from the database
+      const result = await rideRequestCollection.deleteMany({
+        _id: { $in: oldData.map((item) => item._id) },
+      });
+      console.log(result);
       const allDocuments = await activeUsersCollection.find({}).toArray();
 
       // Log the update time for each document
@@ -268,7 +288,7 @@ async function run() {
       // Get all active users and emit data to frontend for real-time updates
       // const activeUsers = await usersCollection.find({}).toArray();
       // io.emit("locationUpdate", activeUsers);
-    }, 6000);
+    }, 10000);
 
     // for getting all emergency
     app.get("/emergency", async (req, res) => {
