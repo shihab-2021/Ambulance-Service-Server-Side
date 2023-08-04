@@ -357,7 +357,7 @@ async function run() {
 
     // for getting all rideRequest
     app.get("/rideBooked", async (req, res) => {
-      const cursor = rideRequestCollection?.find({});
+      const cursor = rideBookedCollection?.find({});
       const rideRequest = await cursor?.toArray();
       res.json(rideRequest);
     });
@@ -365,21 +365,21 @@ async function run() {
     // for posting rideRequest
     app.post("/rideBooked", async (req, res) => {
       const rideRequest = req.body;
-      const result = await rideRequestCollection.insertOne(rideRequest);
+      const result = await rideBookedCollection.insertOne(rideRequest);
       res.json(result);
     });
 
     // for single rideRequest
     app.get("/rideBooked/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
-      const cursor = await rideRequestCollection?.findOne(query);
+      const cursor = await rideBookedCollection?.findOne(query);
       res.json(cursor);
     });
 
     // rideRequest delete api
     app.delete("/delete-rideBooked/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
-      const result = await rideRequestCollection?.deleteOne(query);
+      const result = await rideBookedCollection?.deleteOne(query);
       res.json(result);
     });
 
