@@ -29,6 +29,7 @@ async function run() {
     const activeUsersCollection = database.collection("activeUsers");
     const emergencyCollection = database.collection("emergency");
     const rideRequestCollection = database.collection("rideRequest");
+    const rideBookedCollection = database.collection("rideBooked");
 
     const activeUsers = [];
 
@@ -349,6 +350,34 @@ async function run() {
 
     // rideRequest delete api
     app.delete("/delete-rideRequest/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const result = await rideRequestCollection?.deleteOne(query);
+      res.json(result);
+    });
+
+    // for getting all rideRequest
+    app.get("/rideBooked", async (req, res) => {
+      const cursor = rideRequestCollection?.find({});
+      const rideRequest = await cursor?.toArray();
+      res.json(rideRequest);
+    });
+
+    // for posting rideRequest
+    app.post("/rideBooked", async (req, res) => {
+      const rideRequest = req.body;
+      const result = await rideRequestCollection.insertOne(rideRequest);
+      res.json(result);
+    });
+
+    // for single rideRequest
+    app.get("/rideBooked/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const cursor = await rideRequestCollection?.findOne(query);
+      res.json(cursor);
+    });
+
+    // rideRequest delete api
+    app.delete("/delete-rideBooked/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
       const result = await rideRequestCollection?.deleteOne(query);
       res.json(result);
