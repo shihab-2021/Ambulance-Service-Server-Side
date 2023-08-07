@@ -30,6 +30,7 @@ async function run() {
     const emergencyCollection = database.collection("emergency");
     const rideRequestCollection = database.collection("rideRequest");
     const rideBookedCollection = database.collection("rideBooked");
+    const rideCompletedCollection = database.collection("rideCompleted");
 
     const activeUsers = [];
 
@@ -355,31 +356,59 @@ async function run() {
       res.json(result);
     });
 
-    // for getting all rideRequest
+    // for getting all booked ride
     app.get("/rideBooked", async (req, res) => {
       const cursor = rideBookedCollection?.find({});
       const rideRequest = await cursor?.toArray();
       res.json(rideRequest);
     });
 
-    // for posting rideRequest
+    // for posting booked ride
     app.post("/rideBooked", async (req, res) => {
       const rideRequest = req.body;
       const result = await rideBookedCollection.insertOne(rideRequest);
       res.json(result);
     });
 
-    // for single rideRequest
+    // for single booked ride
     app.get("/rideBooked/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
       const cursor = await rideBookedCollection?.findOne(query);
       res.json(cursor);
     });
 
-    // rideRequest delete api
+    // booked ride delete api
     app.delete("/delete-rideBooked/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
       const result = await rideBookedCollection?.deleteOne(query);
+      res.json(result);
+    });
+
+    // for getting all completed ride
+    app.get("/rideCompleted", async (req, res) => {
+      const cursor = rideCompletedCollection?.find({});
+      const rideRequest = await cursor?.toArray();
+      res.json(rideRequest);
+    });
+
+    // for posting completed ride
+    app.post("/rideCompleted", async (req, res) => {
+      const rideRequest = req.body;
+      const result = await rideCompletedCollection.insertOne(rideRequest);
+      res.json(result);
+    });
+
+    // for single completed ride
+    app.get("/rideCompleted/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const cursor = await rideCompletedCollection?.findOne(query);
+      res.json(cursor);
+    });
+
+    // completed ride delete api
+    app.delete("/delete-rideCompleted/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const result = await rideCompletedCollection?.deleteOne(query);
       res.json(result);
     });
 
