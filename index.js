@@ -31,6 +31,7 @@ async function run() {
     const rideRequestCollection = database.collection("rideRequest");
     const rideBookedCollection = database.collection("rideBooked");
     const rideCompletedCollection = database.collection("rideCompleted");
+    const reportsCollection = database.collection("reports");
 
     const activeUsers = [];
 
@@ -409,6 +410,34 @@ async function run() {
     app.delete("/delete-rideCompleted/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
       const result = await rideCompletedCollection?.deleteOne(query);
+      res.json(result);
+    });
+
+    // for getting all completed ride
+    app.get("/report", async (req, res) => {
+      const cursor = reportsCollection?.find({});
+      const rideRequest = await cursor?.toArray();
+      res.json(rideRequest);
+    });
+
+    // for posting completed ride
+    app.post("/report", async (req, res) => {
+      const rideRequest = req.body;
+      const result = await reportsCollection.insertOne(rideRequest);
+      res.json(result);
+    });
+
+    // for single completed ride
+    app.get("/report/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const cursor = await reportsCollection?.findOne(query);
+      res.json(cursor);
+    });
+
+    // completed ride delete api
+    app.delete("/delete-report/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const result = await reportsCollection?.deleteOne(query);
       res.json(result);
     });
 
