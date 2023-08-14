@@ -212,7 +212,7 @@ async function run() {
 
     // blog delete api
     app.delete("/delete-user/:id", async (req, res) => {
-      const query = { _id: ObjectId(req?.params?.id) };
+      const query = { _id: new ObjectId(req?.params?.id) };
       const result = await usersCollection?.deleteOne(query);
       res.json(result);
     });
