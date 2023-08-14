@@ -212,23 +212,9 @@ async function run() {
 
     // blog delete api
     app.delete("/delete-user/:id", async (req, res) => {
-      const query = { _id: new ObjectId(req.params.id) };
-      const result = await usersCollection.deleteOne(query);
+      const query = { _id: ObjectId(req?.params?.id) };
+      const result = await usersCollection?.deleteOne(query);
       res.json(result);
-
-      const allBreakfasts = await mealCollection
-        .find({ time: "Breakfast" })
-        .toArray();
-
-      allBreakfasts.map(async (item) => {
-        const newBooking = item.bookedBy.filter(
-          (element) => element.uid != req.params.id
-        );
-
-        const filter = { _id: item._id };
-        const updateDoc = { $set: { bookedBy: newBooking } };
-        const result = await mealCollection.updateOne(filter, updateDoc);
-      });
     });
 
     app.put("/activeUsers-data", async (req, res) => {
