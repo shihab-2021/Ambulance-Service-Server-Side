@@ -202,6 +202,15 @@ async function run() {
       res.json(result);
     });
 
+    //make admin
+    app.put("/users/user", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: "Patient" } };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
+
     // for single user
     app.get("/user/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
