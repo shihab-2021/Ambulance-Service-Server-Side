@@ -32,6 +32,7 @@ async function run() {
     const rideBookedCollection = database.collection("rideBooked");
     const rideCompletedCollection = database.collection("rideCompleted");
     const reportsCollection = database.collection("reports");
+    const doctorsCollection = database.collection("doctors");
 
     const activeUsers = [];
 
@@ -433,6 +434,34 @@ async function run() {
     app.delete("/delete-report/:id", async (req, res) => {
       const query = { _id: new ObjectId(req?.params?.id) };
       const result = await reportsCollection?.deleteOne(query);
+      res.json(result);
+    });
+
+    // for getting all doctors info
+    app.get("/doctor", async (req, res) => {
+      const cursor = doctorsCollection?.find({});
+      const rideRequest = await cursor?.toArray();
+      res.json(rideRequest);
+    });
+
+    // for posting doctors info
+    app.post("/doctor", async (req, res) => {
+      const rideRequest = req.body;
+      const result = await doctorsCollection.insertOne(rideRequest);
+      res.json(result);
+    });
+
+    // for single doctors info
+    app.get("/doctor/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const cursor = await doctorsCollection?.findOne(query);
+      res.json(cursor);
+    });
+
+    // doctors info delete api
+    app.delete("/delete-doctor/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req?.params?.id) };
+      const result = await doctorsCollection?.deleteOne(query);
       res.json(result);
     });
 
